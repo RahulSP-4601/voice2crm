@@ -6,7 +6,6 @@ type VerticalKey = "realEstate" | "consulting" | "logistics" | "retail";
 
 type VerticalConfig = {
   label: string;
-  tagline: string;
   summary: string;
   headers: string[];
   rows: string[][];
@@ -16,7 +15,6 @@ type VerticalConfig = {
 const verticals: Record<VerticalKey, VerticalConfig> = {
   realEstate: {
     label: "Real Estate",
-    tagline: "Listings, tours, offers, and follow-ups",
     summary:
       "Track buyers, properties, showing dates, and offer stages without turning your day into data entry.",
     headers: ["Lead", "Property", "Stage", "Next Action"],
@@ -26,13 +24,12 @@ const verticals: Record<VerticalKey, VerticalConfig> = {
       ["Lena Hart", "Westside Loft", "New Inquiry", "Qualify budget"],
     ],
     voicePrompt:
-      "Booked Emma for a showing at 14 Cedar Lane this Saturday at 11.",
+      "Voice input: Booked Emma for a showing at 14 Cedar Lane this Saturday at 11.",
   },
   consulting: {
     label: "Consulting",
-    tagline: "Clients, projects, milestones, and renewals",
     summary:
-      "Log conversations, map active work, and keep every engagement moving without needing custom ops overhead.",
+      "Capture client asks, project milestones, and renewal moments in the same conversational workflow.",
     headers: ["Client", "Project Name", "Status", "Next Milestone"],
     rows: [
       ["Northstar Labs", "RevOps Audit", "Scoping", "Share proposal"],
@@ -40,13 +37,12 @@ const verticals: Record<VerticalKey, VerticalConfig> = {
       ["Vertex Group", "Q3 Advisory", "Renewal Review", "Book strategy call"],
     ],
     voicePrompt:
-      "Northstar wants the RevOps audit proposal by Thursday afternoon.",
+      "Voice input: Northstar wants the RevOps audit proposal by Thursday afternoon.",
   },
   logistics: {
     label: "Logistics",
-    tagline: "Shipments, dispatch, delays, and customer updates",
     summary:
-      "Move from spoken field updates to a live operating view for dispatchers, account managers, and leadership.",
+      "Move from spoken field updates to a live operating view for dispatchers, account managers, and ops leaders.",
     headers: ["Account", "Route", "Delivery Status", "Action Needed"],
     rows: [
       ["Atlas Foods", "Dallas to Houston", "In Transit", "Monitor ETA"],
@@ -54,13 +50,12 @@ const verticals: Record<VerticalKey, VerticalConfig> = {
       ["Nova Retail", "Chicago Express", "Delivered", "Close loop with client"],
     ],
     voicePrompt:
-      "Phoenix linehaul is delayed two hours because of weather. Update Metro.",
+      "Voice input: Phoenix linehaul is delayed two hours because of weather. Update Metro.",
   },
   retail: {
     label: "Retail",
-    tagline: "Stores, buyers, replenishment, and launch plans",
     summary:
-      "Manage product conversations, account notes, and inventory follow-through in a system that fits your merchandising rhythm.",
+      "Manage buyer requests, replenishment follow-through, and launch planning with a schema that adapts instantly.",
     headers: ["Buyer", "Store", "Order Value", "Restock Status"],
     rows: [
       ["Olive & Oak", "SoHo Flagship", "$18,400", "Requested"],
@@ -68,7 +63,7 @@ const verticals: Record<VerticalKey, VerticalConfig> = {
       ["North House", "Denver Pop-up", "$6,780", "Scheduled"],
     ],
     voicePrompt:
-      "Olive & Oak requested a restock for the SoHo flagship before next Friday.",
+      "Voice input: Olive & Oak requested a restock for the SoHo flagship before next Friday.",
   },
 };
 
@@ -84,9 +79,9 @@ export function VerticalSwitcher() {
   const current = verticals[active];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
-      <div className="rounded-[2rem] border border-[#D8E0F0] bg-white p-4 shadow-[0_22px_70px_rgba(61,82,160,0.08)]">
-        <div className="space-y-2">
+    <div className="rounded-[2.2rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(244,238,231,0.92))] p-4 shadow-[0_26px_90px_rgba(90,70,52,0.1)] backdrop-blur-2xl sm:p-6">
+      <div className="mx-auto max-w-5xl">
+        <div className="grid grid-cols-2 gap-3 rounded-[1.6rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,#F1EAE3_0%,#ECE3DB_100%)] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] md:grid-cols-4">
           {order.map((key) => {
             const vertical = verticals[key];
             const isActive = key === active;
@@ -96,75 +91,70 @@ export function VerticalSwitcher() {
                 key={key}
                 type="button"
                 onClick={() => setActive(key)}
-                className={`w-full rounded-[1.4rem] border px-5 py-4 text-left transition duration-300 ${
+                className={`rounded-[1.15rem] px-4 py-4 text-base font-semibold transition duration-300 ${
                   isActive
-                    ? "border-[#3D52A0] bg-[#3D52A0] text-white shadow-[0_16px_36px_rgba(61,82,160,0.24)]"
-                    : "border-transparent bg-[#F7F8FC] text-slate-700 hover:border-[#ADBBDA] hover:bg-[#EEF2FB]"
+                    ? "bg-[linear-gradient(180deg,#D8C5AF_0%,#C5AB8D_100%)] text-[#30261F] shadow-[0_0_0_1px_rgba(201,181,156,0.45),0_10px_22px_rgba(125,98,70,0.12)]"
+                    : "text-[#6E5C4F] hover:bg-[#F8F4EF] hover:text-[#3B2F26]"
                 }`}
               >
-                <p className="text-base font-semibold">{vertical.label}</p>
-                <p
-                  className={`mt-2 text-sm leading-6 ${
-                    isActive ? "text-white/75" : "text-slate-500"
-                  }`}
-                >
-                  {vertical.tagline}
-                </p>
+                {vertical.label}
               </button>
             );
           })}
         </div>
-      </div>
 
-      <div className="rounded-[2rem] border border-[#D8E0F0] bg-white p-6 shadow-[0_22px_70px_rgba(61,82,160,0.08)]">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#8697C4]">
-              {current.label}
-            </p>
-            <h3 className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-[#0F1635] sm:text-[2.2rem]">
-              {current.tagline}
-            </h3>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              {current.summary}
-            </p>
+        <div className="mt-8 rounded-[2rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,#F5EFE8_0%,#E9DFD4_100%)] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] sm:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8B7768]">
+                {current.label}
+              </p>
+              <p className="mt-4 text-lg leading-8 text-[#4E3F34]">
+                {current.summary}
+              </p>
+            </div>
+            <div className="max-w-sm rounded-[1.4rem] border border-[#D3C0AD] bg-[linear-gradient(180deg,#FCFAF7_0%,#F2EBE4_100%)] px-5 py-4 text-[1.05rem] leading-7 text-[#3B2F26] shadow-[0_0_20px_rgba(125,98,70,0.05)]">
+              {current.voicePrompt}
+            </div>
           </div>
-          <div className="rounded-[1.25rem] bg-[#EDE8F5] px-4 py-3 text-sm font-semibold text-[#3D52A0]">
-            Voice input: {current.voicePrompt}
-          </div>
-        </div>
 
-        <div className="mt-8 overflow-hidden rounded-[1.6rem] border border-[#D8E0F0]">
-          <div className="grid grid-cols-2 border-b border-[#D8E0F0] bg-[#F7F8FC] sm:grid-cols-4">
-            {current.headers.map((header) => (
-              <div
-                key={header}
-                className="px-4 py-4 text-sm font-semibold text-[#5A72BB]"
-              >
-                {header}
-              </div>
-            ))}
-          </div>
-          <div className="bg-white">
-            {current.rows.map((row) => (
-              <div
-                key={row.join("-")}
-                className="grid grid-cols-1 border-b border-[#EEF2FB] last:border-b-0 sm:grid-cols-4"
-              >
-                {row.map((cell, index) => (
-                  <div
-                    key={`${cell}-${index}`}
-                    className={`px-4 py-4 text-sm ${
-                      index === 0
-                        ? "font-semibold text-[#0F1635]"
-                        : "text-slate-600"
-                    }`}
-                  >
-                    {cell}
-                  </div>
-                ))}
-              </div>
-            ))}
+          <div className="mt-8 overflow-hidden rounded-[1.7rem] border border-[#D3C0AD] bg-[#FCFAF7]">
+            <div className="hidden grid-cols-4 border-b border-[#DDD2C8] bg-[#F1EAE3] sm:grid">
+              {current.headers.map((header) => (
+                <div
+                  key={header}
+                  className="px-5 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#8B7768]"
+                >
+                  {header}
+                </div>
+              ))}
+            </div>
+
+            <div className="divide-y divide-[#D9CFC7]">
+              {current.rows.map((row) => (
+                <div
+                  key={row.join("-")}
+                  className="grid gap-4 px-5 py-5 sm:grid-cols-4 sm:gap-0"
+                >
+                  {row.map((cell, index) => (
+                    <div key={`${cell}-${index}`}>
+                      <p className="text-xs uppercase tracking-[0.22em] text-[#8B7768] sm:hidden">
+                        {current.headers[index]}
+                      </p>
+                      <p
+                        className={`mt-1 text-[1.05rem] ${
+                          index === 0
+                            ? "font-semibold text-[#3B2F26]"
+                            : "text-[#5F5145]"
+                        }`}
+                      >
+                        {cell}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
