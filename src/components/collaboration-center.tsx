@@ -5,9 +5,9 @@ const waveBars = [
 
 export function CollaborationCenter() {
   return (
-    <div className="relative flex min-h-[56rem] items-center justify-center lg:pt-8">
+    <div className="relative flex min-h-[24rem] items-center justify-center py-2 sm:min-h-[30rem] lg:min-h-[56rem] lg:pt-8">
       <svg
-        className="pointer-events-none block w-full max-w-[92rem] select-none"
+        className="pointer-events-none block w-full max-w-[30rem] select-none sm:max-w-[40rem] lg:max-w-[92rem]"
         viewBox="0 0 860 600"
         fill="none"
         aria-hidden="true"

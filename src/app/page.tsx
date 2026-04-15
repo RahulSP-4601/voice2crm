@@ -116,46 +116,55 @@ export default function Home() {
         </div>
 
         <div className="relative mx-auto max-w-[90rem] px-6 pb-24 pt-5 sm:px-10 lg:px-12">
-          <header className="motion-safe:animate-rise">
-            <div className="mx-auto flex min-h-[5.5rem] w-full max-w-[82rem] items-center justify-between gap-6 rounded-[1.9rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(249,246,241,0.92))] px-6 py-4 shadow-[0_16px_48px_rgba(125,98,70,0.08)] backdrop-blur-xl sm:px-9">
-              <div className="flex items-center gap-3">
-                <div className="grid h-13 w-13 place-items-center rounded-[1.35rem] bg-[linear-gradient(135deg,#D9CFC7_0%,#C9B59C_100%)] text-sm font-semibold text-[#3B2F26] ring-1 ring-[#C9B59C]/50">
-                  <span className="voice-bars" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </span>
+          <header className="animate-soft-pop">
+            <div className="animate-ambient-breathe mx-auto flex w-full max-w-[86rem] flex-col gap-4 rounded-[1.9rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(249,246,241,0.92))] px-4 py-4 backdrop-blur-xl sm:px-6 md:min-h-[5.5rem] md:flex-row md:items-center md:justify-between md:gap-6 md:px-9">
+              <div className="flex items-center justify-between gap-4 md:flex-none">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-12 w-12 place-items-center rounded-[1.2rem] bg-[linear-gradient(135deg,#D9CFC7_0%,#C9B59C_100%)] text-sm font-semibold text-[#3B2F26] ring-1 ring-[#C9B59C]/50 sm:h-13 sm:w-13 sm:rounded-[1.35rem]">
+                    <span className="voice-bars" aria-hidden="true">
+                      <span />
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                  </div>
+                  <p className="text-[1.45rem] font-semibold tracking-[-0.03em] text-[#3B2F26] sm:text-[1.7rem]">
+                    voice2crm
+                  </p>
                 </div>
-                <p className="text-[1.7rem] font-semibold tracking-[-0.03em] text-[#3B2F26]">
-                  voice2crm
-                </p>
+
+                <a
+                  href="#demo"
+                  className="inline-flex min-h-[3.3rem] items-center rounded-[1.15rem] border border-[#C9B59C] bg-[linear-gradient(180deg,#D9C6AF_0%,#C5AC8E_100%)] px-5 py-3 text-[0.98rem] font-semibold text-[#2F251E] shadow-[0_12px_30px_rgba(125,98,70,0.16)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 md:hidden"
+                >
+                  Get started
+                </a>
               </div>
 
-              <nav className="hidden items-center gap-12 text-[1.12rem] text-[#6E5C4F] md:flex">
-                <a href="#features" className="transition hover:text-[#3B2F26]">
+              <nav className="grid grid-cols-3 gap-2 rounded-[1.35rem] border border-[#E4D8CD] bg-white/50 p-2 text-center text-[0.95rem] text-[#6E5C4F] md:flex md:items-center md:justify-center md:gap-12 md:border-0 md:bg-transparent md:p-0 md:text-[1.12rem]">
+                <a href="#features" className="rounded-[0.95rem] px-3 py-2.5 transition hover:bg-[#F3ECE5] hover:text-[#3B2F26] md:rounded-none md:px-0 md:py-0 md:hover:bg-transparent">
                   Features
                 </a>
-                <a href="#demo" className="transition hover:text-[#3B2F26]">
+                <a href="#demo" className="rounded-[0.95rem] px-3 py-2.5 transition hover:bg-[#F3ECE5] hover:text-[#3B2F26] md:rounded-none md:px-0 md:py-0 md:hover:bg-transparent">
                   Pricing
                 </a>
-                <a href="#about" className="transition hover:text-[#3B2F26]">
+                <a href="#about" className="rounded-[0.95rem] px-3 py-2.5 transition hover:bg-[#F3ECE5] hover:text-[#3B2F26] md:rounded-none md:px-0 md:py-0 md:hover:bg-transparent">
                   About
                 </a>
               </nav>
 
               <a
                 href="#demo"
-                className="inline-flex min-h-[3.6rem] items-center rounded-[1.25rem] border border-[#C9B59C] bg-[linear-gradient(180deg,#D9C6AF_0%,#C5AC8E_100%)] px-7 py-3 text-[1.02rem] font-semibold text-[#2F251E] shadow-[0_12px_30px_rgba(125,98,70,0.16)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105"
+                className="hidden min-h-[3.6rem] items-center rounded-[1.25rem] border border-[#C9B59C] bg-[linear-gradient(180deg,#D9C6AF_0%,#C5AC8E_100%)] px-7 py-3 text-[1.02rem] font-semibold text-[#2F251E] shadow-[0_12px_30px_rgba(125,98,70,0.16)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 md:inline-flex"
               >
                 Get started
               </a>
             </div>
           </header>
 
-          <div className="grid gap-8 pb-12 pt-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-8 lg:pt-24">
-            <div className="relative z-10 motion-safe:animate-rise-delayed">
-              <h1 className="max-w-none text-[3.4rem] font-semibold leading-[0.92] tracking-[-0.07em] text-[#3B2F26] sm:text-[4.35rem] lg:text-[4.9rem]">
+          <div className="grid gap-10 pb-12 pt-14 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:gap-8 lg:pt-24">
+            <div className="animate-soft-pop-delayed relative z-10">
+              <h1 className="max-w-none text-[2.7rem] font-semibold leading-[0.92] tracking-[-0.07em] text-[#3B2F26] sm:text-[3.5rem] lg:text-[4.9rem]">
                 <span className="hidden lg:block">
                   The CRM that works
                   <br />
@@ -167,7 +176,7 @@ export default function Home() {
                   the way you talk
                 </span>
               </h1>
-              <p className="mt-7 max-w-none text-[1.1rem] leading-8 text-[#6B594D] sm:text-[1.4rem]">
+              <p className="mt-6 max-w-none text-[1rem] leading-7 text-[#6B594D] sm:text-[1.2rem] lg:text-[1.4rem] lg:leading-8">
                 <span className="hidden lg:block">
                   Whether you sell houses, fix pipes, or manage a team, just talk to log your leads.
                 </span>
@@ -177,10 +186,10 @@ export default function Home() {
                 <span className="block">No typing, no complexity</span>
               </p>
 
-              <div className="mt-10 flex flex-wrap gap-4">
+              <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
                 <a
                   href="#demo"
-                  className="group inline-flex min-h-[4rem] items-center rounded-[1.2rem] bg-[linear-gradient(180deg,#D2B89A_0%,#BE9E7C_100%)] px-8 py-4 text-lg font-semibold text-[#2F251E] shadow-[0_20px_44px_rgba(125,98,70,0.18),0_0_0_1px_rgba(201,181,156,0.18)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105"
+                  className="group inline-flex min-h-[3.7rem] items-center rounded-[1.2rem] bg-[linear-gradient(180deg,#D2B89A_0%,#BE9E7C_100%)] px-6 py-3.5 text-base font-semibold text-[#2F251E] shadow-[0_20px_44px_rgba(125,98,70,0.18),0_0_0_1px_rgba(201,181,156,0.18)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 sm:min-h-[4rem] sm:px-8 sm:py-4 sm:text-lg"
                 >
                   Get started
                   <span className="ml-2 transition duration-300 group-hover:translate-x-0.5">
@@ -189,14 +198,14 @@ export default function Home() {
                 </a>
                 <a
                   href="#features"
-                  className="inline-flex min-h-[4rem] items-center rounded-[1.2rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(244,238,231,0.92))] px-8 py-4 text-lg font-semibold text-[#3B2F26] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:bg-[#F1EBE4]"
+                  className="inline-flex min-h-[3.7rem] items-center rounded-[1.2rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.78),rgba(244,238,231,0.92))] px-6 py-3.5 text-base font-semibold text-[#3B2F26] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:bg-[#F1EBE4] sm:min-h-[4rem] sm:px-8 sm:py-4 sm:text-lg"
                 >
                   Watch demo
                 </a>
               </div>
             </div>
 
-            <div className="relative min-h-[28rem] lg:pl-3 motion-safe:animate-rise-late">
+            <div className="animate-soft-pop-late relative min-h-[22rem] sm:min-h-[25rem] lg:min-h-[28rem] lg:pl-3">
               <div className="absolute inset-x-8 top-10 h-14 rounded-full bg-[#D8C6B4]/22 blur-3xl" />
               <div className="absolute bottom-6 right-10 h-52 w-52 rounded-full border border-[#DDD2C8]/60 bg-[#F3ECE4]/55 blur-[2px]" />
               <div className="absolute bottom-0 right-2 h-60 w-60 rounded-full bg-[#DDD2C8]/22 blur-[100px]" />
@@ -204,10 +213,10 @@ export default function Home() {
               <div className="absolute left-10 top-24 h-64 w-64 rounded-full bg-[#FBF8F4]/70 blur-[120px]" />
               <div className="absolute bottom-10 left-0 h-px w-[24rem] bg-[linear-gradient(90deg,rgba(201,181,156,0),rgba(201,181,156,0.3),rgba(201,181,156,0))]" />
 
-              <div className="relative ml-auto max-w-[36rem] rounded-[2rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(244,238,231,0.82))] p-6 shadow-[0_0_0_1px_rgba(201,181,156,0.08),0_28px_90px_rgba(125,98,70,0.12)] backdrop-blur-2xl">
-                <div className="rounded-[1.7rem] bg-[linear-gradient(180deg,#FCFAF7_0%,#F1EAE3_100%)] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]">
+              <div className="animate-ambient-drift relative ml-auto max-w-[40rem] rounded-[1.7rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,rgba(255,255,255,0.72),rgba(244,238,231,0.82))] p-4 shadow-[0_0_0_1px_rgba(201,181,156,0.08),0_28px_90px_rgba(125,98,70,0.12)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-5 lg:p-6">
+                <div className="rounded-[1.45rem] bg-[linear-gradient(180deg,#FCFAF7_0%,#F1EAE3_100%)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] sm:rounded-[1.7rem] sm:p-6">
                   <div className="flex items-center justify-between gap-4">
-                    <p className="text-[1.75rem] font-semibold tracking-[-0.04em] text-[#3B2F26]">
+                    <p className="text-[1.45rem] font-semibold tracking-[-0.04em] text-[#3B2F26] sm:text-[1.75rem]">
                       Live Capture
                     </p>
                     <span className="inline-flex items-center gap-2 rounded-full border border-[#D3C0AD] bg-[#F5EFE8] px-3 py-1.5 text-sm font-medium text-[#655549]">
@@ -216,7 +225,7 @@ export default function Home() {
                     </span>
                   </div>
 
-                  <div className="relative mt-8 overflow-hidden rounded-[1.35rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,#F6F1EB_0%,#FCFAF7_100%)] px-6 py-7">
+                  <div className="relative mt-6 overflow-hidden rounded-[1.2rem] border border-[#DDD2C8] bg-[linear-gradient(180deg,#F6F1EB_0%,#FCFAF7_100%)] px-4 py-5 sm:mt-8 sm:rounded-[1.35rem] sm:px-6 sm:py-7">
                     <div className="absolute inset-x-10 top-1/2 h-24 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(201,181,156,0.14),transparent_62%)] blur-2xl" />
                     <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-[linear-gradient(90deg,rgba(201,181,156,0),rgba(201,181,156,0.55),rgba(217,207,199,0.55),rgba(201,181,156,0))]" />
                     <div className="voice-wave" aria-hidden="true">
@@ -234,17 +243,17 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="mt-7 rounded-[1.3rem] border border-[#DDD2C8] bg-[#FCFAF7] p-6">
+                  <div className="mt-5 rounded-[1.2rem] border border-[#DDD2C8] bg-[#FCFAF7] p-4 sm:mt-7 sm:rounded-[1.3rem] sm:p-6">
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8B7768]">
                       Transcript
                     </p>
-                    <p className="mt-4 max-w-xl text-[1.2rem] leading-9 text-[#4E3F34]">
+                    <p className="mt-4 max-w-xl text-[1.02rem] leading-8 text-[#4E3F34] sm:text-[1.2rem] sm:leading-9">
                       New plumbing lead. Sarah in Austin needs a full bathroom
                       quote next Tuesday. Budget is around twelve thousand.
                     </p>
                   </div>
 
-                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  <div className="mt-4 grid gap-3 sm:mt-5 sm:grid-cols-3">
                     {[
                       ["Lead", "Sarah Brooks"],
                       ["Next step", "Send quote"],
@@ -252,7 +261,7 @@ export default function Home() {
                     ].map(([label, value]) => (
                       <div
                         key={label}
-                        className="rounded-[1.15rem] border border-[#DDD2C8] bg-[#FCFAF7] px-4 py-3"
+                        className="rounded-[1rem] border border-[#DDD2C8] bg-[#FCFAF7] px-4 py-3 sm:rounded-[1.15rem]"
                       >
                         <p className="text-xs uppercase tracking-[0.22em] text-[#8B7768]">
                           {label}
@@ -268,11 +277,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-4">
             {signalCards.map((card, index) => (
               <article
                 key={card.label}
-                className={`group relative overflow-hidden rounded-[1.8rem] border ${card.border} bg-[linear-gradient(180deg,rgba(252,250,247,0.92),rgba(244,238,231,0.94))] p-5 shadow-[0_18px_40px_rgba(125,98,70,0.08)] backdrop-blur-xl motion-safe:animate-rise`}
+                className={`animate-soft-pop group relative overflow-hidden rounded-[1.55rem] border ${card.border} bg-[linear-gradient(180deg,rgba(252,250,247,0.92),rgba(244,238,231,0.94))] p-5 shadow-[0_18px_40px_rgba(125,98,70,0.08)] backdrop-blur-xl sm:rounded-[1.8rem]`}
                 style={{ animationDelay: `${index * 120}ms` }}
               >
                 <div
@@ -311,7 +320,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-14">
+          <div className="animate-soft-pop mt-14">
             <VerticalSwitcher />
           </div>
         </div>
@@ -374,11 +383,11 @@ export default function Home() {
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[276px_minmax(460px,1fr)_310px] lg:items-start lg:gap-8">
-            <div className="space-y-5 pt-6">
+            <div className="space-y-5 pt-2 sm:pt-4 lg:pt-6">
               {workflowCards.map((card, index) => (
                 <article
                   key={card.title}
-                  className="collab-card motion-safe:animate-rise"
+                  className="collab-card animate-soft-pop"
                   style={{ animationDelay: `${index * 130}ms` }}
                 >
                   <div className="relative flex items-start justify-between gap-4">
@@ -410,7 +419,7 @@ export default function Home() {
 
             <CollaborationCenter />
 
-            <div className="collab-panel mt-1">
+            <div className="collab-panel animate-soft-pop mt-1">
               <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[#8B7768]">
                 Team Activity
               </p>
