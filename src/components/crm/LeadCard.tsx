@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { updateLeadStatus } from "@/app/actions/crm";
+import { updateLeadStatus, assignLead } from "@/app/actions/crm";
 import { useRouter } from "next/navigation";
-import type { Lead } from "@/types/crm";
+import type { Lead, Profile } from "@/types/crm";
 import StatusBadge from "./StatusBadge";
 
 interface Props {
   lead: Lead;
   userRole: string;
+  teamMembers?: Profile[];
 }
 
-export default function LeadCard({ lead, userRole }: Props) {
+export default function LeadCard({ lead, userRole, teamMembers = [] }: Props) {
   const router = useRouter();
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -21,6 +22,15 @@ export default function LeadCard({ lead, userRole }: Props) {
     setIsUpdating(false);
     router.refresh();
   };
+
+  const handleAssignmentChange = async (userId: string) => {
+    setIsUpdating(true);
+    await assignLead(lead.id, userId);
+    setIsUpdating(false);
+    router.refresh();
+  };
+
+  const canAssignLeads = userRole === "owner" || userRole === "admin";
 
   const isOverdue =
     lead.follow_up && new Date(lead.follow_up) < new Date(new Date().toDateString());
@@ -100,12 +110,31 @@ export default function LeadCard({ lead, userRole }: Props) {
         </div>
       )}
 
-      {/* Assigned To */}
-      {lead.assigned_user && (
-        <div className="text-xs text-gray-500">
+      {/* Assignment */}
+      {canAssignLeads ? (
+        <div className="mb-3">
+          <label className="mb-1 block text-xs font-medium text-gray-600">
+            Assign to:
+          </label>
+          <select
+            value={lead.assigned_to || ""}
+            onChange={(e) => handleAssignmentChange(e.target.value)}
+            disabled={isUpdating}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20"
+          >
+            <option value="">Unassigned</option>
+            {teamMembers.map((member) => (
+              <option key={member.id} value={member.id}>
+                {member.company_name || member.email}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : lead.assigned_user ? (
+        <div className="mb-3 text-xs text-gray-500">
           Assigned to: {lead.assigned_user.company_name || lead.assigned_user.email}
         </div>
-      )}
+      ) : null}
 
       {/* Footer */}
       <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3 text-xs text-gray-500">

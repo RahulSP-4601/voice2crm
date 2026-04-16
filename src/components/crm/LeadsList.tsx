@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import type { Lead } from "@/types/crm";
+import type { Lead, Profile } from "@/types/crm";
 import LeadCard from "./LeadCard";
 
 interface Props {
   initialLeads: Lead[];
   userRole: string;
+  teamMembers?: Profile[];
 }
 
-export default function LeadsList({ initialLeads, userRole }: Props) {
+export default function LeadsList({ initialLeads, userRole, teamMembers = [] }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
@@ -60,7 +61,12 @@ export default function LeadsList({ initialLeads, userRole }: Props) {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredLeads.map((lead) => (
-            <LeadCard key={lead.id} lead={lead} userRole={userRole} />
+            <LeadCard
+              key={lead.id}
+              lead={lead}
+              userRole={userRole}
+              teamMembers={teamMembers}
+            />
           ))}
         </div>
       )}

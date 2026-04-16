@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/app/actions/auth";
-import { getDashboardStats, getLeads, getCurrentProfile } from "@/app/actions/crm";
+import { getDashboardStats, getLeads, getCurrentProfile, getCompanyUsers } from "@/app/actions/crm";
 import DashboardStats from "@/components/crm/DashboardStats";
 import LeadsList from "@/components/crm/LeadsList";
 import CreateLeadButton from "@/components/crm/CreateLeadButton";
 import SignOutButton from "@/components/SignOutButton";
+import TeamManagement from "@/components/crm/TeamManagement";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -21,9 +22,13 @@ export default async function DashboardPage() {
 
   const statsResult = await getDashboardStats();
   const leadsResult = await getLeads();
+  const usersResult = await getCompanyUsers();
 
   const stats = statsResult.data;
   const leads = leadsResult.data || [];
+  const users = usersResult.data || [];
+
+  const canManageTeam = profile.role === "owner" || profile.role === "admin";
 
   return (
     <main className="min-h-screen bg-[#F9F8F6]">
@@ -59,6 +64,17 @@ export default async function DashboardPage() {
         {/* Stats */}
         {stats && <DashboardStats stats={stats} />}
 
+        {/* Team Management - Only for Owner/Admin */}
+        {canManageTeam && (
+          <div className="mt-8">
+            <TeamManagement
+              users={users}
+              currentUserRole={profile.role}
+              currentUserId={profile.id}
+            />
+          </div>
+        )}
+
         {/* Leads Section */}
         <div className="mt-8">
           <div className="mb-4 flex items-center justify-between">
@@ -68,7 +84,11 @@ export default async function DashboardPage() {
             <CreateLeadButton />
           </div>
 
-          <LeadsList initialLeads={leads} userRole={profile.role} />
+          <LeadsList
+            initialLeads={leads}
+            userRole={profile.role}
+            teamMembers={users}
+          />
         </div>
       </div>
     </main>
