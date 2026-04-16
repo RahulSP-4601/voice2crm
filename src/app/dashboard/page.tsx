@@ -56,7 +56,7 @@ export default async function DashboardPage() {
             <div className="flex items-center gap-3">
               <ProfileDropdown
                 userRole={profile.role}
-                userName={profile.company_name || user.email.split("@")[0]}
+                userName={profile.company_name || user.email?.split("@")[0] || "User"}
               />
               <SignOutButton />
             </div>
