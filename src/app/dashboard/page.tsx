@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import { getUser, signOut } from "@/app/actions/auth";
+import { getUser } from "@/app/actions/auth";
 import { getDashboardStats, getLeads, getCurrentProfile } from "@/app/actions/crm";
-import Link from "next/link";
 import DashboardStats from "@/components/crm/DashboardStats";
 import LeadsList from "@/components/crm/LeadsList";
 import CreateLeadButton from "@/components/crm/CreateLeadButton";
+import SignOutButton from "@/components/SignOutButton";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -51,14 +51,7 @@ export default async function DashboardPage() {
               <span className="hidden text-sm text-[#6E5C4F] sm:block">
                 {user.email}
               </span>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  className="rounded-lg border border-[#DDD2C8] bg-white px-4 py-2 text-sm font-medium text-[#3B2F26] transition hover:bg-[#F9F8F6]"
-                >
-                  Sign out
-                </button>
-              </form>
+              <SignOutButton />
             </div>
           </div>
         </header>
