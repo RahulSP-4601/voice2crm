@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signUp } from "@/app/actions/auth";
 
-export default function SignUpPage() {
+function SignUpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteToken = searchParams.get("invite");
@@ -325,5 +325,22 @@ export default function SignUpPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen overflow-x-hidden bg-[#F9F8F6] text-[#3B2F26]">
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#C9B59C] border-t-transparent mx-auto mb-4"></div>
+            <p className="text-[#8B7768]">Loading...</p>
+          </div>
+        </div>
+      </main>
+    }>
+      <SignUpForm />
+    </Suspense>
   );
 }
