@@ -117,6 +117,10 @@ export async function createLead(input: CreateLeadInput) {
     return { error: "Not authenticated" };
   }
 
+  if (!profile.company_id) {
+    return { error: "Your account is not linked to a company. Please sign out and sign in again, or contact support." };
+  }
+
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return { error: "Not authenticated" };
@@ -136,6 +140,9 @@ export async function createLead(input: CreateLeadInput) {
   if (error) {
     if (error.code === "23505") {
       return { error: "A lead with this phone number already exists in your company" };
+    }
+    if (error.code === "42501") {
+      return { error: "Permission denied. Please sign out and sign in again to refresh your session." };
     }
     console.error("Error creating lead:", error);
     return { error: error.message };
