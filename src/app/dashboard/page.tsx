@@ -6,6 +6,7 @@ import LeadsList from "@/components/crm/LeadsList";
 import CreateLeadButton from "@/components/crm/CreateLeadButton";
 import SignOutButton from "@/components/SignOutButton";
 import ProfileDropdown from "@/components/ProfileDropdown";
+import FollowUpWidget from "@/components/crm/FollowUpWidget";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -62,6 +63,11 @@ export default async function DashboardPage() {
 
         {/* Stats */}
         {stats && <DashboardStats stats={stats} />}
+
+        {/* Follow-Up Widget */}
+        <div className="mt-8">
+          <FollowUpWidget leads={leads} />
+        </div>
 
         {/* Leads Section */}
         <div className="mt-8">
