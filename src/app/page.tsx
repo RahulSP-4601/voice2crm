@@ -134,7 +134,7 @@ export default function Home() {
                 </div>
 
                 <a
-                  href="#demo"
+                  href="/signup"
                   className="inline-flex min-h-[3.3rem] items-center rounded-[1.15rem] border border-[#C9B59C] bg-[linear-gradient(180deg,#D9C6AF_0%,#C5AC8E_100%)] px-5 py-3 text-[0.98rem] font-semibold text-[#2F251E] shadow-[0_12px_30px_rgba(125,98,70,0.16)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 md:hidden"
                 >
                   Get started
@@ -154,7 +154,7 @@ export default function Home() {
               </nav>
 
               <a
-                href="#demo"
+                href="/signup"
                 className="hidden min-h-[3.6rem] items-center rounded-[1.25rem] border border-[#C9B59C] bg-[linear-gradient(180deg,#D9C6AF_0%,#C5AC8E_100%)] px-7 py-3 text-[1.02rem] font-semibold text-[#2F251E] shadow-[0_12px_30px_rgba(125,98,70,0.16)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 md:inline-flex"
               >
                 Get started
@@ -188,7 +188,7 @@ export default function Home() {
 
               <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
                 <a
-                  href="#demo"
+                  href="/signup"
                   className="group inline-flex min-h-[3.7rem] items-center rounded-[1.2rem] bg-[linear-gradient(180deg,#D2B89A_0%,#BE9E7C_100%)] px-6 py-3.5 text-base font-semibold text-[#2F251E] shadow-[0_20px_44px_rgba(125,98,70,0.18),0_0_0_1px_rgba(201,181,156,0.18)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 sm:min-h-[4rem] sm:px-8 sm:py-4 sm:text-lg"
                 >
                   Get started
