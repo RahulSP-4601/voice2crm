@@ -16,6 +16,51 @@ import type {
 // HELPER FUNCTIONS
 // =====================================================
 
+async function ensureUserHasCompany(supabase: any, profile: Profile) {
+  if (profile.company_id) {
+    return profile;
+  }
+
+  // User doesn't have a company, create one
+  const { data: company, error: companyError } = await supabase
+    .from("companies")
+    .insert({
+      name: profile.company_name || "My Company",
+      owner_id: profile.id,
+    })
+    .select()
+    .single();
+
+  if (companyError) {
+    // Company might already exist, try to fetch it
+    const { data: existingCompany } = await supabase
+      .from("companies")
+      .select("*")
+      .eq("owner_id", profile.id)
+      .single();
+
+    if (existingCompany) {
+      // Update profile with existing company
+      await supabase
+        .from("profiles")
+        .update({ company_id: existingCompany.id })
+        .eq("id", profile.id);
+
+      return { ...profile, company_id: existingCompany.id };
+    }
+
+    return profile;
+  }
+
+  // Update profile with new company
+  await supabase
+    .from("profiles")
+    .update({ company_id: company.id })
+    .eq("id", profile.id);
+
+  return { ...profile, company_id: company.id };
+}
+
 async function getCurrentUserProfile() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -30,7 +75,14 @@ async function getCurrentUserProfile() {
     .eq("id", user.id)
     .single();
 
-  return profile as Profile | null;
+  if (!profile) {
+    return null;
+  }
+
+  // Ensure user has a company
+  const updatedProfile = await ensureUserHasCompany(supabase, profile as Profile);
+
+  return updatedProfile as Profile | null;
 }
 
 // =====================================================
@@ -118,7 +170,7 @@ export async function createLead(input: CreateLeadInput) {
   }
 
   if (!profile.company_id) {
-    return { error: "Your account is not linked to a company. Please sign out and sign in again, or contact support." };
+    return { error: "Unable to create company. Please contact support." };
   }
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -140,9 +192,6 @@ export async function createLead(input: CreateLeadInput) {
   if (error) {
     if (error.code === "23505") {
       return { error: "A lead with this phone number already exists in your company" };
-    }
-    if (error.code === "42501") {
-      return { error: "Permission denied. Please sign out and sign in again to refresh your session." };
     }
     console.error("Error creating lead:", error);
     return { error: error.message };
