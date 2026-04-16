@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useOptimistic, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import type { Lead, Profile } from "@/types/crm";
 import LeadCard from "./LeadCard";
+import QuickAddLead from "./QuickAddLead";
 
 interface Props {
   initialLeads: Lead[];
@@ -11,10 +13,35 @@ interface Props {
 }
 
 export default function LeadsList({ initialLeads, userRole, teamMembers = [] }: Props) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const filteredLeads = initialLeads.filter((lead) => {
+  // Optimistic updates for leads
+  const [optimisticLeads, setOptimisticLeads] = useOptimistic(
+    initialLeads,
+    (state, updatedLead: Lead) => {
+      return state.map((lead) =>
+        lead.id === updatedLead.id ? updatedLead : lead
+      );
+    }
+  );
+
+  const handleLeadUpdate = (updatedLead: Lead) => {
+    setOptimisticLeads(updatedLead);
+    startTransition(() => {
+      router.refresh();
+    });
+  };
+
+  const handleLeadAdded = () => {
+    startTransition(() => {
+      router.refresh();
+    });
+  };
+
+  const filteredLeads = optimisticLeads.filter((lead) => {
     const matchesSearch =
       lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.phone.includes(searchTerm);
@@ -26,6 +53,11 @@ export default function LeadsList({ initialLeads, userRole, teamMembers = [] }: 
 
   return (
     <div>
+      {/* Quick Add Lead */}
+      <div className="mb-6">
+        <QuickAddLead onLeadAdded={handleLeadAdded} />
+      </div>
+
       {/* Filters */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row">
         <input
@@ -66,6 +98,7 @@ export default function LeadsList({ initialLeads, userRole, teamMembers = [] }: 
               lead={lead}
               userRole={userRole}
               teamMembers={teamMembers}
+              onUpdate={handleLeadUpdate}
             />
           ))}
         </div>
