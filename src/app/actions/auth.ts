@@ -138,7 +138,8 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return { error: error.message };
+    console.error("Sign out error:", error);
+    // Don't throw, just redirect to home
   }
 
   revalidatePath("/", "layout");
