@@ -13,15 +13,15 @@ export default async function DashboardPage() {
     redirect("/signin");
   }
 
-  const profileResult = await getCurrentProfile();
+  const profile = await getCurrentProfile();
+
+  if (!profile) {
+    redirect("/signin");
+  }
+
   const statsResult = await getDashboardStats();
   const leadsResult = await getLeads();
 
-  if (!profileResult || profileResult.error) {
-    return <div>Error loading profile</div>;
-  }
-
-  const profile = profileResult;
   const stats = statsResult.data;
   const leads = leadsResult.data || [];
 
