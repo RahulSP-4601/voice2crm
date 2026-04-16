@@ -6,6 +6,7 @@ import LeadsList from "@/components/crm/LeadsList";
 import CreateLeadButton from "@/components/crm/CreateLeadButton";
 import SignOutButton from "@/components/SignOutButton";
 import TeamManagement from "@/components/crm/TeamManagement";
+import ProfileDropdown from "@/components/ProfileDropdown";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -53,9 +54,10 @@ export default async function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="hidden text-sm text-[#6E5C4F] sm:block">
-                {user.email}
-              </span>
+              <ProfileDropdown
+                userRole={profile.role}
+                userName={profile.company_name || user.email.split("@")[0]}
+              />
               <SignOutButton />
             </div>
           </div>

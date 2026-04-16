@@ -7,17 +7,49 @@ import { createClient } from "@/lib/supabase/server";
 export async function signUp(formData: {
   email: string;
   password: string;
-  companyName: string;
+  companyName?: string;
+  inviteToken?: string;
+  inviteRole?: string;
+  inviteCompanyId?: string;
 }) {
   const supabase = await createClient();
 
+  // Check if this is an invite signup
+  const isInviteSignup = !!formData.inviteToken;
+
   // Validate input
-  if (!formData.email || !formData.password || !formData.companyName) {
-    return { error: "All fields are required" };
+  if (!formData.email || !formData.password) {
+    return { error: "Email and password are required" };
+  }
+
+  if (!isInviteSignup && !formData.companyName) {
+    return { error: "Company name is required" };
   }
 
   if (formData.password.length < 8) {
     return { error: "Password must be at least 8 characters long" };
+  }
+
+  // If invite signup, verify the invitation
+  let invitation = null;
+  if (isInviteSignup && formData.inviteToken) {
+    const { data: inv, error: invError } = await supabase
+      .from("invitations")
+      .select("*")
+      .eq("token", formData.inviteToken)
+      .eq("accepted", false)
+      .single();
+
+    if (invError || !inv) {
+      return { error: "Invalid or expired invitation link" };
+    }
+
+    // Check if invitation has expired
+    if (new Date(inv.expires_at) < new Date()) {
+      return { error: "This invitation has expired" };
+    }
+
+    invitation = inv;
   }
 
   const data = {
@@ -25,7 +57,9 @@ export async function signUp(formData: {
     password: formData.password,
     options: {
       data: {
-        company_name: formData.companyName.trim(),
+        company_name: formData.companyName?.trim() || "Employee",
+        role: invitation ? invitation.role : "owner",
+        company_id: invitation ? invitation.company_id : undefined,
       },
     },
   };
@@ -70,12 +104,22 @@ export async function signUp(formData: {
 
     // If profile doesn't exist, create it manually
     if (!existingProfile) {
-      const { error: profileError } = await supabase.from("profiles").insert({
+      const profileData: any = {
         id: authData.user.id,
         email: formData.email.trim().toLowerCase(),
-        company_name: formData.companyName.trim(),
+        company_name: formData.companyName?.trim() || "Employee",
+        role: invitation ? invitation.role : "owner",
         created_at: new Date().toISOString(),
-      });
+      };
+
+      // Add company_id for invite signups
+      if (invitation) {
+        profileData.company_id = invitation.company_id;
+      }
+
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert(profileData);
 
       if (profileError) {
         console.error("Profile creation error:", profileError);
@@ -88,6 +132,26 @@ export async function signUp(formData: {
           console.warn("Profile creation failed, will retry on sign-in");
         }
       }
+    } else if (invitation) {
+      // Update existing profile with company and role from invitation
+      await supabase
+        .from("profiles")
+        .update({
+          company_id: invitation.company_id,
+          role: invitation.role,
+        })
+        .eq("id", authData.user.id);
+    }
+
+    // Mark invitation as accepted
+    if (invitation) {
+      await supabase
+        .from("invitations")
+        .update({
+          accepted: true,
+          accepted_at: new Date().toISOString(),
+        })
+        .eq("token", formData.inviteToken);
     }
   } catch (err) {
     console.error("Unexpected error handling profile:", err);

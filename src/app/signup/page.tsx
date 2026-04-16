@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signUp } from "@/app/actions/auth";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("invite");
+  const inviteEmail = searchParams.get("email");
+  const inviteRole = searchParams.get("role");
+  const inviteCompany = searchParams.get("company");
+
   const [formData, setFormData] = useState({
     companyName: "",
-    email: "",
+    email: inviteEmail || "",
     password: "",
     confirmPassword: "",
   });
@@ -47,7 +53,8 @@ export default function SignUpPage() {
       confirmPassword: "",
     };
 
-    if (!formData.companyName.trim()) {
+    // Skip company name validation if it's an invite signup
+    if (!inviteToken && !formData.companyName.trim()) {
       newErrors.companyName = "Company name is required";
     }
 
@@ -90,7 +97,10 @@ export default function SignUpPage() {
       const result = await signUp({
         email: formData.email.trim(),
         password: formData.password,
-        companyName: formData.companyName.trim(),
+        companyName: inviteToken ? undefined : formData.companyName.trim(),
+        inviteToken: inviteToken || undefined,
+        inviteRole: inviteRole || undefined,
+        inviteCompanyId: inviteCompany || undefined,
       });
 
       if (result.error) {
@@ -175,10 +185,12 @@ export default function SignUpPage() {
               <div className="relative">
                 <div className="text-center">
                   <h1 className="text-[2.2rem] font-semibold tracking-[-0.05em] text-[#3B2F26] sm:text-[2.8rem]">
-                    Create your account
+                    {inviteToken ? "Join the team" : "Create your account"}
                   </h1>
                   <p className="mt-3 text-base leading-7 text-[#6E5C4F] sm:text-lg">
-                    Start managing your leads with voice
+                    {inviteToken
+                      ? "You've been invited to join a team"
+                      : "Start managing your leads with voice"}
                   </p>
                 </div>
 
@@ -189,28 +201,30 @@ export default function SignUpPage() {
                 )}
 
                 <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-                  <div>
-                    <label
-                      htmlFor="companyName"
-                      className="mb-2 block text-sm font-semibold text-[#3B2F26]"
-                    >
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      id="companyName"
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleChange}
-                      className={`w-full rounded-[1.1rem] border ${
-                        errors.companyName ? "border-red-400" : "border-[#DDD2C8]"
-                      } bg-[#FCFAF7] px-4 py-3.5 text-[#3B2F26] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20`}
-                      placeholder="Your company name"
-                    />
-                    {errors.companyName && (
-                      <p className="mt-1.5 text-sm text-red-600">{errors.companyName}</p>
-                    )}
-                  </div>
+                  {!inviteToken && (
+                    <div>
+                      <label
+                        htmlFor="companyName"
+                        className="mb-2 block text-sm font-semibold text-[#3B2F26]"
+                      >
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        id="companyName"
+                        name="companyName"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        className={`w-full rounded-[1.1rem] border ${
+                          errors.companyName ? "border-red-400" : "border-[#DDD2C8]"
+                        } bg-[#FCFAF7] px-4 py-3.5 text-[#3B2F26] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20`}
+                        placeholder="Your company name"
+                      />
+                      {errors.companyName && (
+                        <p className="mt-1.5 text-sm text-red-600">{errors.companyName}</p>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <label

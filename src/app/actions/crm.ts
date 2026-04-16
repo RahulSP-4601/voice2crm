@@ -469,3 +469,120 @@ export async function updateUserRole(userId: string, role: string) {
 export async function getCurrentProfile() {
   return await getCurrentUserProfile();
 }
+
+export async function updateProfile(input: { company_name?: string }) {
+  const supabase = await createClient();
+  const profile = await getCurrentUserProfile();
+
+  if (!profile) {
+    return { error: "Not authenticated" };
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update(input)
+    .eq("id", profile.id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating profile:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/settings");
+  return { success: true, data };
+}
+
+export async function deleteAccount() {
+  const supabase = await createClient();
+  const profile = await getCurrentUserProfile();
+
+  if (!profile) {
+    return { error: "Not authenticated" };
+  }
+
+  if (profile.role !== "owner") {
+    return { error: "Only owners can delete the account" };
+  }
+
+  // Delete company (cascade will delete leads, notes, activity_logs, and profiles)
+  const { error: companyError } = await supabase
+    .from("companies")
+    .delete()
+    .eq("id", profile.company_id);
+
+  if (companyError) {
+    console.error("Error deleting company:", companyError);
+    return { error: companyError.message };
+  }
+
+  // Sign out the user
+  await supabase.auth.signOut();
+
+  return { success: true };
+}
+
+export async function sendInvite(email: string, role: string, companyId: string) {
+  const supabase = await createClient();
+  const profile = await getCurrentUserProfile();
+
+  if (!profile) {
+    return { error: "Not authenticated" };
+  }
+
+  if (profile.role === "employee") {
+    return { error: "Only owners and admins can send invitations" };
+  }
+
+  // Check if user already exists with this email
+  const { data: existingProfiles } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("email", email);
+
+  if (existingProfiles && existingProfiles.length > 0) {
+    return { error: "A user with this email already exists" };
+  }
+
+  // Create an invitation record in the database
+  const inviteToken = crypto.randomUUID();
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
+
+  const { error: inviteError } = await supabase
+    .from("invitations")
+    .insert({
+      email,
+      role,
+      company_id: companyId,
+      token: inviteToken,
+      expires_at: expiresAt.toISOString(),
+      invited_by: profile.id,
+    });
+
+  if (inviteError) {
+    console.error("Error creating invitation:", inviteError);
+    // If invitations table doesn't exist, just generate a signup link
+    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/signup?invite=${inviteToken}&email=${encodeURIComponent(email)}&role=${role}&company=${companyId}`;
+
+    return {
+      success: true,
+      inviteLink,
+      message: "Invite link generated. Share this link with the user.",
+    };
+  }
+
+  // Generate invite link
+  const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/signup?invite=${inviteToken}`;
+
+  // In production, send this link via email service (SendGrid, Resend, etc.)
+  // For now, we return the link so it can be copied and shared manually
+
+  return {
+    success: true,
+    inviteLink,
+    message: "Invite link generated. Share this link with the user.",
+  };
+}
