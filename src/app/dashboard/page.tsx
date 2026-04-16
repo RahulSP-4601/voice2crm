@@ -3,6 +3,7 @@ import { getUser } from "@/app/actions/auth";
 import { getDashboardStats, getLeads, getCurrentProfile, getCompanyUsers } from "@/app/actions/crm";
 import DashboardStats from "@/components/crm/DashboardStats";
 import LeadsList from "@/components/crm/LeadsList";
+import CreateLeadButton from "@/components/crm/CreateLeadButton";
 import SignOutButton from "@/components/SignOutButton";
 import ProfileDropdown from "@/components/ProfileDropdown";
 import FollowUpWidget from "@/components/crm/FollowUpWidget";
@@ -70,13 +71,11 @@ export default async function DashboardPage() {
 
         {/* Leads Section */}
         <div className="mt-8">
-          <div className="mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl font-semibold text-[#3B2F26]">
-              All Leads
+              Leads
             </h2>
-            <p className="mt-1 text-sm text-[#8B7768]">
-              Manage and track your leads
-            </p>
+            <CreateLeadButton />
           </div>
 
           <LeadsList

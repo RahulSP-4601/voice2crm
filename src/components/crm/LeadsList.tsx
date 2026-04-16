@@ -4,7 +4,6 @@ import { useState, useOptimistic, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Lead, Profile } from "@/types/crm";
 import LeadCard from "./LeadCard";
-import QuickAddLead from "./QuickAddLead";
 
 interface Props {
   initialLeads: Lead[];
@@ -35,12 +34,6 @@ export default function LeadsList({ initialLeads, userRole, teamMembers = [] }: 
     });
   };
 
-  const handleLeadAdded = () => {
-    startTransition(() => {
-      router.refresh();
-    });
-  };
-
   const filteredLeads = optimisticLeads.filter((lead) => {
     const matchesSearch =
       lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -53,11 +46,6 @@ export default function LeadsList({ initialLeads, userRole, teamMembers = [] }: 
 
   return (
     <div>
-      {/* Quick Add Lead */}
-      <div className="mb-6">
-        <QuickAddLead onLeadAdded={handleLeadAdded} />
-      </div>
-
       {/* Filters */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row">
         <input
