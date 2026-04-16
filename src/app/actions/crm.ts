@@ -47,10 +47,7 @@ export async function getLeads() {
 
   const { data, error } = await supabase
     .from("leads")
-    .select(`
-      *,
-      assigned_user:assigned_to(id, email, company_name)
-    `)
+    .select("*")
     .eq("company_id", profile.company_id)
     .order("created_at", { ascending: false });
 
@@ -59,7 +56,23 @@ export async function getLeads() {
     return { error: error.message };
   }
 
-  return { data: data as Lead[] };
+  // Fetch assigned users separately if needed
+  const leadsWithUsers = await Promise.all(
+    (data || []).map(async (lead) => {
+      if (lead.assigned_to) {
+        const { data: assignedUser } = await supabase
+          .from("profiles")
+          .select("id, email, company_name")
+          .eq("id", lead.assigned_to)
+          .single();
+
+        return { ...lead, assigned_user: assignedUser };
+      }
+      return lead;
+    })
+  );
+
+  return { data: leadsWithUsers as Lead[] };
 }
 
 export async function getLead(id: string) {
@@ -72,10 +85,7 @@ export async function getLead(id: string) {
 
   const { data, error } = await supabase
     .from("leads")
-    .select(`
-      *,
-      assigned_user:assigned_to(id, email, company_name)
-    `)
+    .select("*")
     .eq("id", id)
     .eq("company_id", profile.company_id)
     .single();
@@ -85,7 +95,18 @@ export async function getLead(id: string) {
     return { error: error.message };
   }
 
-  return { data: data as Lead };
+  // Fetch assigned user if exists
+  let assignedUser = null;
+  if (data.assigned_to) {
+    const { data: user } = await supabase
+      .from("profiles")
+      .select("id, email, company_name")
+      .eq("id", data.assigned_to)
+      .single();
+    assignedUser = user;
+  }
+
+  return { data: { ...data, assigned_user: assignedUser } as Lead };
 }
 
 export async function createLead(input: CreateLeadInput) {
@@ -109,10 +130,7 @@ export async function createLead(input: CreateLeadInput) {
       created_by: user.id,
       status: "new",
     })
-    .select(`
-      *,
-      assigned_user:assigned_to(id, email, company_name)
-    `)
+    .select()
     .single();
 
   if (error) {
@@ -140,10 +158,7 @@ export async function updateLead(id: string, input: UpdateLeadInput) {
     .update(input)
     .eq("id", id)
     .eq("company_id", profile.company_id)
-    .select(`
-      *,
-      assigned_user:assigned_to(id, email, company_name)
-    `)
+    .select()
     .single();
 
   if (error) {
@@ -151,8 +166,19 @@ export async function updateLead(id: string, input: UpdateLeadInput) {
     return { error: error.message };
   }
 
+  // Fetch assigned user if exists
+  let assignedUser = null;
+  if (data.assigned_to) {
+    const { data: user } = await supabase
+      .from("profiles")
+      .select("id, email, company_name")
+      .eq("id", data.assigned_to)
+      .single();
+    assignedUser = user;
+  }
+
   revalidatePath("/dashboard");
-  return { data: data as Lead };
+  return { data: { ...data, assigned_user: assignedUser } as Lead };
 }
 
 export async function deleteLead(id: string) {
