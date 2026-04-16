@@ -5,7 +5,6 @@ import DashboardStats from "@/components/crm/DashboardStats";
 import LeadsList from "@/components/crm/LeadsList";
 import CreateLeadButton from "@/components/crm/CreateLeadButton";
 import SignOutButton from "@/components/SignOutButton";
-import TeamManagement from "@/components/crm/TeamManagement";
 import ProfileDropdown from "@/components/ProfileDropdown";
 
 export default async function DashboardPage() {
@@ -28,8 +27,6 @@ export default async function DashboardPage() {
   const stats = statsResult.data;
   const leads = leadsResult.data || [];
   const users = usersResult.data || [];
-
-  const canManageTeam = profile.role === "owner" || profile.role === "admin";
 
   return (
     <main className="min-h-screen bg-[#F9F8F6]">
@@ -65,17 +62,6 @@ export default async function DashboardPage() {
 
         {/* Stats */}
         {stats && <DashboardStats stats={stats} />}
-
-        {/* Team Management - Only for Owner/Admin */}
-        {canManageTeam && (
-          <div className="mt-8">
-            <TeamManagement
-              users={users}
-              currentUserRole={profile.role}
-              currentUserId={profile.id}
-            />
-          </div>
-        )}
 
         {/* Leads Section */}
         <div className="mt-8">
