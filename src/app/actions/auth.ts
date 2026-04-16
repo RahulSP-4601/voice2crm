@@ -33,16 +33,23 @@ export async function signUp(formData: {
   const { data: authData, error } = await supabase.auth.signUp(data);
 
   if (error) {
-    // Handle specific error cases
+    console.error("Sign up error:", error);
+
+    // Handle specific error cases with user-friendly messages
     if (error.message.includes("User already registered")) {
       return { error: "This email is already registered. Please sign in instead." };
     }
-    if (error.message.includes("email")) {
-      return { error: "Please enter a valid email address" };
-    }
-    if (error.message.includes("Password")) {
+    if (error.message.includes("Password should be at least")) {
       return { error: "Password must be at least 8 characters long" };
     }
+    if (error.message.includes("Database error")) {
+      return { error: "Database error. Please try again or contact support." };
+    }
+    if (error.message.includes("rate limit")) {
+      return { error: "Too many signup attempts. Please wait a few minutes." };
+    }
+
+    // Return the actual error message from Supabase for debugging
     return { error: error.message };
   }
 
