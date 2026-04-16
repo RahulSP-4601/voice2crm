@@ -51,28 +51,40 @@ export async function signUp(formData: {
     return { error: "Sign up failed. Please try again." };
   }
 
-  // Create user profile in database
+  // Profile will be created automatically by database trigger
+  // But if trigger is not set up, we'll try to create it manually
   try {
-    const { error: profileError } = await supabase.from("profiles").insert({
-      id: authData.user.id,
-      email: formData.email.trim().toLowerCase(),
-      company_name: formData.companyName.trim(),
-      created_at: new Date().toISOString(),
-    });
+    // Check if profile already exists (from trigger)
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", authData.user.id)
+      .single();
 
-    if (profileError) {
-      console.error("Profile creation error:", profileError);
-      // Even if profile creation fails, auth user is created
-      // They can still sign in, and we can create profile later
-      if (profileError.code === "23505") {
-        // Duplicate key - profile already exists
-        return { success: true, user: authData.user, needsConfirmation: !authData.session };
+    // If profile doesn't exist, create it manually
+    if (!existingProfile) {
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: authData.user.id,
+        email: formData.email.trim().toLowerCase(),
+        company_name: formData.companyName.trim(),
+        created_at: new Date().toISOString(),
+      });
+
+      if (profileError) {
+        console.error("Profile creation error:", profileError);
+        // Check if it's a duplicate (race condition with trigger)
+        if (profileError.code === "23505") {
+          // Profile exists, continue
+        } else {
+          // For RLS errors or other issues, user can still sign in
+          // Profile can be created on first sign-in
+          console.warn("Profile creation failed, will retry on sign-in");
+        }
       }
-      return { error: "Account created but profile setup failed. Please contact support." };
     }
   } catch (err) {
-    console.error("Unexpected error creating profile:", err);
-    return { error: "An unexpected error occurred. Please try again." };
+    console.error("Unexpected error handling profile:", err);
+    // Don't fail signup if profile creation has issues
   }
 
   revalidatePath("/", "layout");
