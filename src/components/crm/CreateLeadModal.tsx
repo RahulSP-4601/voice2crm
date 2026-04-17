@@ -130,22 +130,28 @@ export default function CreateLeadModal({ isOpen, onClose, userRole, teamMembers
             />
           </div>
 
-          {canAssignLeads && teamMembers.length > 0 && (
+          {canAssignLeads && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Assign to
+                Assign to <span className="text-xs text-gray-500">(type to search)</span>
               </label>
               <select
                 name="assigned_to"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20"
               >
                 <option value="">Unassigned</option>
-                {teamMembers.map((member) => (
-                  <option key={member.id} value={member.id}>
-                    {member.company_name || member.email} ({member.role})
-                  </option>
-                ))}
+                {teamMembers.map((member) => {
+                  const displayName = member.company_name || member.email.split('@')[0];
+                  return (
+                    <option key={member.id} value={member.id}>
+                      {displayName} - {member.role}
+                    </option>
+                  );
+                })}
               </select>
+              {teamMembers.length === 0 && (
+                <p className="mt-1 text-xs text-gray-500">No team members yet. Invite users first.</p>
+              )}
             </div>
           )}
 
