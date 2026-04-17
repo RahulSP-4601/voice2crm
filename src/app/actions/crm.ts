@@ -546,10 +546,8 @@ export async function sendInvite(email: string, role: string, companyId: string)
     return { error: "A user with this email already exists" };
   }
 
-  // Determine base URL (production or local)
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
-                  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
-                  "http://localhost:3000";
+  // Use Next.js site URL
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   // Create an invitation record in the database
   const inviteToken = crypto.randomUUID();
