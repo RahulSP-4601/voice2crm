@@ -141,7 +141,15 @@ export default function CreateLeadModal({ isOpen, onClose, userRole, teamMembers
               >
                 <option value="">Unassigned</option>
                 {teamMembers.map((member) => {
-                  const displayName = member.company_name || member.email.split('@')[0];
+                  // Use email if company_name is generic or missing
+                  const isGenericName = !member.company_name ||
+                                       member.company_name === 'User' ||
+                                       member.company_name === 'Employee' ||
+                                       member.company_name === 'Employees';
+                  const displayName = isGenericName
+                    ? member.email.split('@')[0]
+                    : member.company_name;
+
                   return (
                     <option key={member.id} value={member.id}>
                       {displayName} - {member.role}
