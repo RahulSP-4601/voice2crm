@@ -577,8 +577,8 @@ export async function sendInvite(email: string, role: string, companyId: string)
     };
   }
 
-  // Generate invite link
-  const inviteLink = `${baseUrl}/signup?invite=${inviteToken}`;
+  // Generate invite link with email pre-filled
+  const inviteLink = `${baseUrl}/signup?invite=${inviteToken}&email=${encodeURIComponent(email)}`;
 
   // In production, send this link via email service (SendGrid, Resend, etc.)
   // For now, we return the link so it can be copied and shared manually

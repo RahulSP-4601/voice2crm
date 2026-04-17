@@ -231,7 +231,7 @@ function SignUpForm() {
                       htmlFor="email"
                       className="mb-2 block text-sm font-semibold text-[#3B2F26]"
                     >
-                      Email Address
+                      Email Address {inviteToken && <span className="text-xs text-[#8B7768]">(from invite)</span>}
                     </label>
                     <input
                       type="email"
@@ -239,9 +239,10 @@ function SignUpForm() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
+                      readOnly={!!inviteToken}
                       className={`w-full rounded-[1.1rem] border ${
                         errors.email ? "border-red-400" : "border-[#DDD2C8]"
-                      } bg-[#FCFAF7] px-4 py-3.5 text-[#3B2F26] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20`}
+                      } ${inviteToken ? "bg-gray-100 cursor-not-allowed" : "bg-[#FCFAF7]"} px-4 py-3.5 text-[#3B2F26] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] transition focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20`}
                       placeholder="name@company.com"
                     />
                     {errors.email && (
