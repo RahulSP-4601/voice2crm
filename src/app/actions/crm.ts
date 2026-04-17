@@ -546,6 +546,11 @@ export async function sendInvite(email: string, role: string, companyId: string)
     return { error: "A user with this email already exists" };
   }
 
+  // Determine base URL (production or local)
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
+                  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` :
+                  "http://localhost:3000";
+
   // Create an invitation record in the database
   const inviteToken = crypto.randomUUID();
   const expiresAt = new Date();
@@ -565,7 +570,7 @@ export async function sendInvite(email: string, role: string, companyId: string)
   if (inviteError) {
     console.error("Error creating invitation:", inviteError);
     // If invitations table doesn't exist, just generate a signup link
-    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/signup?invite=${inviteToken}&email=${encodeURIComponent(email)}&role=${role}&company=${companyId}`;
+    const inviteLink = `${baseUrl}/signup?invite=${inviteToken}&email=${encodeURIComponent(email)}&role=${role}&company=${companyId}`;
 
     return {
       success: true,
@@ -575,7 +580,7 @@ export async function sendInvite(email: string, role: string, companyId: string)
   }
 
   // Generate invite link
-  const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/signup?invite=${inviteToken}`;
+  const inviteLink = `${baseUrl}/signup?invite=${inviteToken}`;
 
   // In production, send this link via email service (SendGrid, Resend, etc.)
   // For now, we return the link so it can be copied and shared manually
