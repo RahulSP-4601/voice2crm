@@ -387,10 +387,18 @@ export async function getDashboardStats() {
     return { error: "Not authenticated" };
   }
 
-  const { data: leads, error } = await supabase
+  // Build query based on role
+  let query = supabase
     .from("leads")
     .select("status, follow_up")
     .eq("company_id", profile.company_id);
+
+  // Employees only see stats for their assigned leads
+  if (profile.role === "employee") {
+    query = query.eq("assigned_to", profile.id);
+  }
+
+  const { data: leads, error } = await query;
 
   if (error) {
     console.error("Error fetching dashboard stats:", error);
