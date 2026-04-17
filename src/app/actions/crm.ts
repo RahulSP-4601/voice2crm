@@ -97,11 +97,18 @@ export async function getLeads() {
     return { error: "Not authenticated" };
   }
 
-  const { data, error } = await supabase
+  // Build query based on role
+  let query = supabase
     .from("leads")
     .select("*")
-    .eq("company_id", profile.company_id)
-    .order("created_at", { ascending: false });
+    .eq("company_id", profile.company_id);
+
+  // Employees can only see leads assigned to them
+  if (profile.role === "employee") {
+    query = query.eq("assigned_to", profile.id);
+  }
+
+  const { data, error } = await query.order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching leads:", error);
