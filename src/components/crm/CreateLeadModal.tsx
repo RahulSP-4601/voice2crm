@@ -3,16 +3,21 @@
 import { useState } from "react";
 import { createLead } from "@/app/actions/crm";
 import { useRouter } from "next/navigation";
+import type { Profile } from "@/types/crm";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  userRole: string;
+  teamMembers?: Profile[];
 }
 
-export default function CreateLeadModal({ isOpen, onClose }: Props) {
+export default function CreateLeadModal({ isOpen, onClose, userRole, teamMembers = [] }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const canAssignLeads = userRole === "owner" || userRole === "admin";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,12 +25,15 @@ export default function CreateLeadModal({ isOpen, onClose }: Props) {
     setError("");
 
     const formData = new FormData(e.currentTarget);
+    const assignedTo = formData.get("assigned_to") as string;
+
     const data = {
       name: formData.get("name") as string,
       phone: formData.get("phone") as string,
       email: formData.get("email") as string || undefined,
       source: formData.get("source") as string || undefined,
       follow_up: formData.get("follow_up") as string || undefined,
+      assigned_to: assignedTo || undefined,
     };
 
     const result = await createLead(data);
@@ -121,6 +129,25 @@ export default function CreateLeadModal({ isOpen, onClose }: Props) {
               className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20"
             />
           </div>
+
+          {canAssignLeads && teamMembers.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Assign to
+              </label>
+              <select
+                name="assigned_to"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#C9B59C] focus:outline-none focus:ring-2 focus:ring-[#C9B59C]/20"
+              >
+                <option value="">Unassigned</option>
+                {teamMembers.map((member) => (
+                  <option key={member.id} value={member.id}>
+                    {member.company_name || member.email} ({member.role})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="flex gap-3 pt-4">
             <button

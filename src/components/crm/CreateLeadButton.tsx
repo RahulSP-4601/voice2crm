@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import CreateLeadModal from "./CreateLeadModal";
+import type { Profile } from "@/types/crm";
 
-export default function CreateLeadButton() {
+interface Props {
+  userRole: string;
+  teamMembers?: Profile[];
+}
+
+export default function CreateLeadButton({ userRole, teamMembers = [] }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -19,6 +25,8 @@ export default function CreateLeadButton() {
         <CreateLeadModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
+          userRole={userRole}
+          teamMembers={teamMembers}
         />
       )}
     </>

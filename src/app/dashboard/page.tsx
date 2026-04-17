@@ -75,7 +75,7 @@ export default async function DashboardPage() {
             <h2 className="text-2xl font-semibold text-[#3B2F26]">
               Leads
             </h2>
-            <CreateLeadButton />
+            <CreateLeadButton userRole={profile.role} teamMembers={users} />
           </div>
 
           <LeadsList
